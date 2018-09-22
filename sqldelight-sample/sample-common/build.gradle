@@ -1,0 +1,53 @@
+buildscript {
+  apply from: "$rootDir/gradle/dependencies.gradle"
+
+  repositories {
+    mavenCentral()
+    google()
+    maven {
+      url 'http://dl.bintray.com/kotlin/kotlin-eap'
+    }
+    maven {
+      url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+  }
+
+  dependencies {
+    classpath deps.plugins.kotlin
+
+    // Used for the sample
+    classpath "com.squareup.sqldelight:android-gradle-plugin:${versions.sqldelight}"
+  }
+}
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'com.squareup.sqldelight'
+
+archivesBaseName = 'sample-common'
+
+sqldelight {
+  packageName = "com.example.sqldelight.hockey"
+}
+
+repositories {
+  mavenCentral()
+  maven {
+    url 'http://dl.bintray.com/kotlin/kotlin-eap'
+  }
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/snapshots/'
+  }
+}
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+      }
+    }
+  }
+  targets {
+    fromPreset(presets.jvm, 'jvm')
+  }
+}

@@ -1,0 +1,97 @@
+buildscript {
+  apply from: "$rootDir/gradle/dependencies.gradle"
+
+  repositories {
+    mavenCentral()
+    google()
+    maven {
+      url 'http://dl.bintray.com/kotlin/kotlin-eap'
+    }
+  }
+
+  dependencies {
+    classpath deps.plugins.kotlin
+    classpath deps.plugins.android
+  }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  lintOptions {
+    // TODO (KT-27170): Reenable when this is no longer a multiplatform module or lint fixes to
+    // work with kotlin multiplatform
+    tasks.lint.enabled = false
+    // textOutput 'stdout'
+  }
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion versions.compileSdk
+
+    applicationId 'com.example.sqldelight.hockey'
+
+    versionCode 1
+    versionName '1.0'
+  }
+
+  signingConfigs {
+    debug {
+      storeFile file('debug.keystore')
+      storePassword 'android'
+      keyAlias 'android'
+      keyPassword 'android'
+    }
+  }
+
+  buildTypes {
+    debug {
+      applicationIdSuffix '.development'
+      signingConfig signingConfigs.debug
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
+  google()
+  maven {
+    url 'http://dl.bintray.com/kotlin/kotlin-eap'
+  }
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/snapshots/'
+  }
+}
+
+dependencies {
+  implementation deps.kotlin.stdlib.jdk
+  // TODO implementation deps.androidx.sqliteFramework
+  implementation 'androidx.sqlite:sqlite:2.0.0-rc01'
+
+  implementation "androidx.recyclerview:recyclerview:1.0.0"
+  implementation ("com.squareup.sqldelight:android-driver:${versions.sqldelight}") {
+    exclude group: 'com.squareup.sqldelight', module: 'runtime-jdk'
+  }
+}
+
+kotlin {
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation project(':sqldelight-sample:sample-common')
+      }
+    }
+  }
+
+  targets {
+    fromPreset(presets.android, 'androidApp')
+  }
+}

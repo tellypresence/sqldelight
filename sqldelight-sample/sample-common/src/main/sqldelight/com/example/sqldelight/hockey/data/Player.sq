@@ -9,15 +9,14 @@ CREATE TABLE player (
   team INTEGER,
   age INTEGER AS Integer NOT NULL,
   weight REAL AS Float NOT NULL,
-  birth_date INTEGER AS Calendar NOT NULL,
   shoots TEXT AS PlayerVals.Shoots NOT NULL,
   position TEXT AS PlayerVals.Position NOT NULL,
   FOREIGN KEY (team) REFERENCES team(id)
 );
 
 insertPlayer:
-INSERT INTO player (first_name, last_name, number, team, age, weight, birth_date, shoots, position)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO player (first_name, last_name, number, team, age, weight, shoots, position)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 selectAll:
 SELECT *
